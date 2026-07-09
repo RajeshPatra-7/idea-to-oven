@@ -144,6 +144,7 @@ export function RecipeInput({
           <div className="inline-flex items-center gap-3 rounded-full border border-border px-3 py-1.5">
             <button
               type="button"
+              aria-label="Decrease servings"
               onClick={() => setOptions((o) => ({ ...o, servings: Math.max(1, o.servings - 1) }))}
               className="text-muted-foreground hover:text-foreground"
             >
@@ -162,6 +163,7 @@ export function RecipeInput({
             </AnimatePresence>
             <button
               type="button"
+              aria-label="Increase servings"
               onClick={() => setOptions((o) => ({ ...o, servings: Math.min(12, o.servings + 1) }))}
               className="text-muted-foreground hover:text-foreground"
             >

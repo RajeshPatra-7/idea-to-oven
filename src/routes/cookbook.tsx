@@ -5,7 +5,22 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 
-export const Route = createFileRoute("/cookbook")({ component: Cookbook });
+const SITE = "https://idea-to-oven.lovable.app";
+
+export const Route = createFileRoute("/cookbook")({
+  component: Cookbook,
+  head: () => ({
+    meta: [
+      { title: "Your Cookbook — Describe It, Cook It" },
+      { name: "description", content: "Your personal collection of saved AI-generated recipes. Search, filter by diet, and revisit anytime." },
+      { property: "og:title", content: "Your Cookbook — Describe It, Cook It" },
+      { property: "og:description", content: "Your personal collection of saved AI-generated recipes." },
+      { property: "og:url", content: `${SITE}/cookbook` },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [{ rel: "canonical", href: `${SITE}/cookbook` }],
+  }),
+});
 
 type Row = {
   id: string;

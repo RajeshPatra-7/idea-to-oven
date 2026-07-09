@@ -10,7 +10,24 @@ import { generateRecipe, saveRecipe, type GeneratedRecipe } from "@/lib/recipes.
 import { useAuth } from "@/hooks/use-auth";
 import { RefreshCw, BookmarkPlus, Share2 } from "lucide-react";
 
-export const Route = createFileRoute("/")({ component: Home });
+const SITE = "https://idea-to-oven.lovable.app";
+const OG_IMAGE = "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/360f04ae-5529-48a0-966f-81174a446b05/id-preview-42445e01--d53d145d-4e4c-46c8-91a6-559eeca3340c.lovable.app-1783620015212.png";
+
+export const Route = createFileRoute("/")({
+  component: Home,
+  head: () => ({
+    meta: [
+      { title: "Describe It, Cook It — AI Recipe Generator" },
+      { name: "description", content: "Type any dish, craving, or leftover — our AI writes a complete recipe with ingredients, steps, timing, and nutrition." },
+      { property: "og:title", content: "Describe It, Cook It — AI Recipe Generator" },
+      { property: "og:description", content: "Type any dish, craving, or leftover — our AI writes a complete recipe with ingredients, steps, timing, and nutrition." },
+      { property: "og:url", content: `${SITE}/` },
+      { property: "og:image", content: OG_IMAGE },
+      { name: "twitter:image", content: OG_IMAGE },
+    ],
+    links: [{ rel: "canonical", href: `${SITE}/` }],
+  }),
+});
 
 function Home() {
   const { user } = useAuth();

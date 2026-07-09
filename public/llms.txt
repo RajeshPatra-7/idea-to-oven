@@ -1,0 +1,10 @@
+# Describe It, Cook It
+
+> AI-powered recipe generator that turns any food idea, craving, or list of ingredients into a complete, structured recipe in seconds.
+
+Describe It, Cook It uses AI to write custom recipes from natural-language descriptions — including ingredients, step-by-step instructions, timings, and nutrition estimates. Users can save recipes to a personal cookbook and share them with a public community feed.
+
+## Pages
+
+- [Home](/): Describe any dish and generate a full recipe with dietary, cuisine, spice, and serving controls.
+- [Community](/community): Browse recipes shared by other cooks, sorted by newest or most liked.
