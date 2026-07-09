@@ -14,7 +14,119 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      recipe_likes: {
+        Row: {
+          created_at: string
+          recipe_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          recipe_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          recipe_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "recipe_likes_recipe_id_fkey"
+            columns: ["recipe_id"]
+            isOneToOne: false
+            referencedRelation: "recipes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      recipes: {
+        Row: {
+          cook_time: string | null
+          created_at: string
+          cuisine: string | null
+          description: string | null
+          dietary: string | null
+          difficulty: string | null
+          dish_name: string
+          id: string
+          ingredients: Json
+          is_public: boolean
+          likes_count: number
+          nutrition: Json
+          prep_time: string | null
+          prompt: string
+          servings: number | null
+          spice_level: string | null
+          steps: Json
+          total_time: string | null
+          user_id: string
+        }
+        Insert: {
+          cook_time?: string | null
+          created_at?: string
+          cuisine?: string | null
+          description?: string | null
+          dietary?: string | null
+          difficulty?: string | null
+          dish_name: string
+          id?: string
+          ingredients?: Json
+          is_public?: boolean
+          likes_count?: number
+          nutrition?: Json
+          prep_time?: string | null
+          prompt: string
+          servings?: number | null
+          spice_level?: string | null
+          steps?: Json
+          total_time?: string | null
+          user_id: string
+        }
+        Update: {
+          cook_time?: string | null
+          created_at?: string
+          cuisine?: string | null
+          description?: string | null
+          dietary?: string | null
+          difficulty?: string | null
+          dish_name?: string
+          id?: string
+          ingredients?: Json
+          is_public?: boolean
+          likes_count?: number
+          nutrition?: Json
+          prep_time?: string | null
+          prompt?: string
+          servings?: number | null
+          spice_level?: string | null
+          steps?: Json
+          total_time?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
