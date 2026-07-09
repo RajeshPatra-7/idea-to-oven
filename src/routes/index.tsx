@@ -91,7 +91,21 @@ function Home() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-12 md:py-20">
+    <div className="relative mx-auto max-w-6xl px-6 py-12 md:py-20">
+      <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
+        <div
+          className="animated-blob"
+          style={{ top: "-6rem", left: "-4rem", width: "22rem", height: "22rem", background: "var(--terracotta)" }}
+        />
+        <div
+          className="animated-blob"
+          style={{ top: "10rem", right: "-6rem", width: "26rem", height: "26rem", background: "var(--ember)", animationDelay: "-5s" }}
+        />
+        <div
+          className="animated-blob"
+          style={{ bottom: "-8rem", left: "30%", width: "20rem", height: "20rem", background: "var(--sage)", animationDelay: "-9s", opacity: 0.22 }}
+        />
+      </div>
       {!recipe && !loading && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
