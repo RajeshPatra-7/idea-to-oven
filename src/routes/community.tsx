@@ -8,7 +8,21 @@ import { LikeButton } from "@/components/LikeButton";
 import { useAuth } from "@/hooks/use-auth";
 import { toggleLike } from "@/lib/recipes.functions";
 
-export const Route = createFileRoute("/community")({ component: Community });
+const SITE = "https://idea-to-oven.lovable.app";
+
+export const Route = createFileRoute("/community")({
+  component: Community,
+  head: () => ({
+    meta: [
+      { title: "Community Recipes — Describe It, Cook It" },
+      { name: "description", content: "Browse AI-generated recipes shared by the community. Sort by newest or most liked, and save your favourites." },
+      { property: "og:title", content: "Community Recipes — Describe It, Cook It" },
+      { property: "og:description", content: "Browse AI-generated recipes shared by the community. Sort by newest or most liked." },
+      { property: "og:url", content: `${SITE}/community` },
+    ],
+    links: [{ rel: "canonical", href: `${SITE}/community` }],
+  }),
+});
 
 type Row = {
   id: string;

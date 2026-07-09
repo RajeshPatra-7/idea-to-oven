@@ -11,7 +11,22 @@ import { deleteRecipe, togglePublish, toggleLike, type GeneratedRecipe } from "@
 import { formatRecipeText } from "./index";
 import { Globe, Lock, Share2, Trash2 } from "lucide-react";
 
-export const Route = createFileRoute("/recipe/$id")({ component: RecipePage });
+const SITE = "https://idea-to-oven.lovable.app";
+
+export const Route = createFileRoute("/recipe/$id")({
+  component: RecipePage,
+  head: ({ params }) => ({
+    meta: [
+      { title: "Recipe — Describe It, Cook It" },
+      { name: "description", content: "A custom AI-generated recipe with ingredients, step-by-step instructions, timing, and estimated nutrition." },
+      { property: "og:title", content: "Recipe — Describe It, Cook It" },
+      { property: "og:description", content: "A custom AI-generated recipe with ingredients, steps, and nutrition." },
+      { property: "og:type", content: "article" },
+      { property: "og:url", content: `${SITE}/recipe/${params.id}` },
+    ],
+    links: [{ rel: "canonical", href: `${SITE}/recipe/${params.id}` }],
+  }),
+});
 
 async function fetchRecipe(id: string) {
   const { data, error } = await supabase.from("recipes").select("*").eq("id", id).maybeSingle();

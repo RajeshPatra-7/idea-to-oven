@@ -7,7 +7,22 @@ import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/hooks/use-auth";
 import { ChefHat } from "lucide-react";
 
-export const Route = createFileRoute("/auth")({ component: AuthPage });
+const SITE = "https://idea-to-oven.lovable.app";
+
+export const Route = createFileRoute("/auth")({
+  component: AuthPage,
+  head: () => ({
+    meta: [
+      { title: "Sign in — Describe It, Cook It" },
+      { name: "description", content: "Sign in or create an account to save recipes to your cookbook and share them with the community." },
+      { property: "og:title", content: "Sign in — Describe It, Cook It" },
+      { property: "og:description", content: "Sign in or create an account to save and share AI-generated recipes." },
+      { property: "og:url", content: `${SITE}/auth` },
+      { name: "robots", content: "noindex" },
+    ],
+    links: [{ rel: "canonical", href: `${SITE}/auth` }],
+  }),
+});
 
 function AuthPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
