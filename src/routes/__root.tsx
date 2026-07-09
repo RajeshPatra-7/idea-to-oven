@@ -55,11 +55,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Describe It, Cook It — AI Recipe Generator" },
       { property: "og:description", content: "Culinary Muse is an AI-powered recipe generator that creates custom recipes from your descriptions." },
       { property: "og:type", content: "website" },
+      { property: "og:site_name", content: "Describe It, Cook It" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Describe It, Cook It — AI Recipe Generator" },
       { name: "twitter:description", content: "Culinary Muse is an AI-powered recipe generator that creates custom recipes from your descriptions." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/360f04ae-5529-48a0-966f-81174a446b05/id-preview-42445e01--d53d145d-4e4c-46c8-91a6-559eeca3340c.lovable.app-1783620015212.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/360f04ae-5529-48a0-966f-81174a446b05/id-preview-42445e01--d53d145d-4e4c-46c8-91a6-559eeca3340c.lovable.app-1783620015212.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

@@ -9,12 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as CookbookRouteImport } from './routes/cookbook'
 import { Route as CommunityRouteImport } from './routes/community'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as RecipeIdRouteImport } from './routes/recipe.$id'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CookbookRoute = CookbookRouteImport.update({
   id: '/cookbook',
   path: '/cookbook',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/community': typeof CommunityRoute
   '/cookbook': typeof CookbookRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/recipe/$id': typeof RecipeIdRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/community': typeof CommunityRoute
   '/cookbook': typeof CookbookRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/recipe/$id': typeof RecipeIdRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,34 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/community': typeof CommunityRoute
   '/cookbook': typeof CookbookRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/recipe/$id': typeof RecipeIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/community' | '/cookbook' | '/recipe/$id'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/community'
+    | '/cookbook'
+    | '/sitemap.xml'
+    | '/recipe/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/community' | '/cookbook' | '/recipe/$id'
-  id: '__root__' | '/' | '/auth' | '/community' | '/cookbook' | '/recipe/$id'
+  to:
+    | '/'
+    | '/auth'
+    | '/community'
+    | '/cookbook'
+    | '/sitemap.xml'
+    | '/recipe/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/community'
+    | '/cookbook'
+    | '/sitemap.xml'
+    | '/recipe/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,11 +104,19 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   CommunityRoute: typeof CommunityRoute
   CookbookRoute: typeof CookbookRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   RecipeIdRoute: typeof RecipeIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cookbook': {
       id: '/cookbook'
       path: '/cookbook'
@@ -124,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   CommunityRoute: CommunityRoute,
   CookbookRoute: CookbookRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   RecipeIdRoute: RecipeIdRoute,
 }
 export const routeTree = rootRouteImport
