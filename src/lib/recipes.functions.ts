@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { generateText, NoObjectGeneratedError, Output } from "ai";
+import { generateText } from "ai";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { createGateway } from "./ai-gateway.server";
@@ -47,9 +47,23 @@ function buildPrompt(input: z.infer<typeof GenerateInput>) {
   if (input.spice) parts.push(`Spice level: ${input.spice}.`);
   if (input.servings) parts.push(`Servings: ${input.servings}.`);
   parts.push(
-    "Return a complete recipe with precise quantities, numbered steps, and an estimated nutritional summary per serving (label it as an estimate).",
+    'Return ONLY a single valid JSON object (no markdown, no code fences, no commentary) matching exactly this shape: {"name": string, "description": string, "prepTime": string, "cookTime": string, "totalTime": string, "difficulty": "Easy"|"Medium"|"Hard", "servings": number, "ingredients": [{"item": string, "quantity": string}], "steps": [string], "nutrition": {"calories": string, "protein": string, "carbs": string, "fat": string}}. All numeric values inside strings (e.g. "10 min", "320 kcal"). Nutrition is a per-serving estimate.',
   );
   return parts.join(" ");
+}
+
+function extractJson(raw: string): unknown {
+  let s = raw.trim();
+  s = s.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  const start = s.search(/[\{\[]/);
+  const end = Math.max(s.lastIndexOf("}"), s.lastIndexOf("]"));
+  if (start !== -1 && end !== -1 && end > start) s = s.slice(start, end + 1);
+  try {
+    return JSON.parse(s);
+  } catch {
+    const repaired = s.replace(/,\s*([}\]])/g, "$1").replace(/[\u0000-\u001F]/g, " ");
+    return JSON.parse(repaired);
+  }
 }
 
 export const generateRecipe = createServerFn({ method: "POST" })
@@ -58,25 +72,36 @@ export const generateRecipe = createServerFn({ method: "POST" })
     const gateway = createGateway();
     const model = gateway("google/gemini-3-flash-preview");
 
+    const { text } = await generateText({
+      model,
+      system:
+        "You are a professional chef and recipe designer. You ALWAYS respond with ONLY a single raw JSON object matching the user's requested schema. No prose, no markdown, no code fences.",
+      prompt: buildPrompt(data),
+    });
+
+    let parsed: unknown;
     try {
-      const { output } = await generateText({
-        model,
-        output: Output.object({ schema: RecipeSchema }),
-        system:
-          "You are a professional chef and recipe designer. Always return realistic, well-tested recipes with precise ingredient measurements and clear cooking steps.",
-        prompt: buildPrompt(data),
-      });
-      return output;
-    } catch (error) {
-      if (NoObjectGeneratedError.isInstance(error)) {
-        try {
-          return RecipeSchema.parse(JSON.parse(error.text ?? ""));
-        } catch {
-          throw new Error("Recipe generation failed. Try again with a slightly different idea.");
-        }
-      }
-      throw error;
+      parsed = extractJson(text);
+    } catch (e) {
+      console.error("[generateRecipe] JSON parse failed. Raw model output:\n", text);
+      throw new Error(
+        `Model returned unparseable output. First 200 chars: ${text.slice(0, 200)}`,
+      );
     }
+
+    const result = RecipeSchema.safeParse(parsed);
+    if (!result.success) {
+      console.error(
+        "[generateRecipe] Schema validation failed. Raw:\n",
+        text,
+        "\nIssues:",
+        JSON.stringify(result.error.issues, null, 2),
+      );
+      throw new Error(
+        `Recipe schema mismatch: ${result.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ")}`,
+      );
+    }
+    return result.data;
   });
 
 const SaveInput = z.object({
